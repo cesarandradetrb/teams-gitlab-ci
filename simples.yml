@@ -1,0 +1,83 @@
+# Este YAML adiciona um after_script, para gerar um card de notificação em caso de erro.
+# Qualquer modificação no leiaute do card de erro deve ser feita aqui.
+.notifica_erro:
+  after_script:
+  - |
+    generate_post_data()
+    {
+    cat << EOF
+    {
+        "@context": "https://schema.org/extensions",
+        "@type": "MessageCard",
+        "themeColor": "810000",
+        "title": "Pipeline $CI_PIPELINE_ID executado com ERRO!",
+        "summary": "Pipeline executado com ERRO!",
+        "sections": [
+            {
+                "startGroup": true,
+                "activityTitle": "Erro na execução do pipeline $CI_PIPELINE_ID.",
+                "facts": [
+                    {
+                        "name": "Nome do job",
+                        "value": "$CI_JOB_NAME"
+                    },
+                    {
+                        "name": "ID do job",
+                        "value": "$CI_JOB_ID"
+                    },
+                    {
+                        "name": "Estágio do job",
+                        "value": "$CI_JOB_STAGE"
+                    }
+                ]
+            },
+            {
+                "startGroup": true,
+                "potentialAction": [
+                    {
+                        "@type": "OpenUri",
+                        "name": "Pipeline com erro",
+                        "targets": [
+                            {
+                                 "os": "default",
+                                "uri": "$CI_PIPELINE_URL"
+                            }
+                        ]
+                    },
+                    {
+                        "@type": "OpenUri",
+                        "name": "Job com erro",
+                        "targets": [
+                            {
+                                "os": "default",
+                                "uri": "$CI_JOB_URL"
+                            }
+                        ]
+                    },
+                    {
+                        "@type": "OpenUri",
+                        "name": "Projeto no Gitlab",
+                        "targets": [
+                            {
+                                "os": "default",
+                                "uri": "$CI_PROJECT_URL"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "startGroup": true,
+                "activitySubtitle": "Esta notificação foi gerada automaticamente a partir do Gitlab $CI_SERVER_URL."
+            }
+        ]
+    }
+    EOF
+    }
+  - |
+    if [ "$CI_JOB_STATUS" = "failed" ]
+    then
+      curl -H "Content-Type:application/json" \
+      -d "$(generate_post_data)" \
+      $WEBHOOK_TEAMS     
+    fi

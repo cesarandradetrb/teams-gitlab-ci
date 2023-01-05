@@ -32,3 +32,7 @@ default:
   after_script:
     - !reference [.notifica_erro, after_script]
 ```
+
+## Customizando para suas necessidades
+
+Caso haja necessidade de customização dos cards, sugerimos a utilização do [Messagecard Playground](https://messagecardplayground.azurewebsites.net) para desenhar e testar o card.
