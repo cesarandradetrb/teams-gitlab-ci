@@ -1,5 +1,7 @@
 # Notificando canais do Teams a partir de um pipeline GitLab CI
 
+**ATENÇÃO: [Estes scripts deixarão de funcionar em 1º de outubro](https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/).**
+
 Este repositório contém exemplos de como criar cards de notificação para canais do [Microsoft Teams](https://www.microsoft.com/pt-br/microsoft-teams/) a partir de um pipeline [GitLab](https://gitlab.com) CI.
 
 ## Escopo
